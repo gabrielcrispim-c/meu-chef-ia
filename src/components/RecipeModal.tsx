@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Recipe } from '../types';
 import { X, Plus, Trash2 } from 'lucide-react';
 
@@ -61,7 +61,7 @@ export function RecipeModal({ isOpen, onClose, onSave, initialData }: RecipeModa
     setInstructions(newInstructions);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSave({
       name,

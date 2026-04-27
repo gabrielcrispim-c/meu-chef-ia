@@ -50,5 +50,22 @@ export async function generateRecipe(ingredients: string): Promise<Omit<Recipe, 
     throw new Error('Falha ao gerar receita');
   }
 
-  return JSON.parse(text);
+  let parsed;
+  try {
+    // Remover blocos markdown se a IA colocar
+    const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    parsed = JSON.parse(cleanText);
+  } catch (e) {
+    throw new Error('Falha ao interpretar a receita gerada');
+  }
+
+  // Garantir a estrutura correta para que o React não trave (tela branca)
+  return {
+    name: parsed.name || 'Receita Surpresa',
+    category: parsed.category || '🍽️',
+    ingredients: Array.isArray(parsed.ingredients) ? parsed.ingredients : [],
+    instructions: Array.isArray(parsed.instructions) ? parsed.instructions : [],
+    time: parsed.time || '30 min',
+    difficulty: parsed.difficulty || 'Médio'
+  };
 }
